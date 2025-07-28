@@ -1,0 +1,545 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>互動式國際論文架構指南</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;500;700&display=swap" rel="stylesheet">
+    <!-- Chosen Palette: Warm Neutrals (Amber/Stone) -->
+    <!-- Application Structure Plan: The application is designed as an interactive process map. The core structure of a research paper is visualized as a clickable flowchart on the left. Clicking a section (node) instantly displays its detailed purpose, content, and requirements in a panel on the right. This task-oriented design transforms the linear document into an intuitive, non-linear tool. It provides a high-level overview of the entire writing process while allowing users to drill down into specific sections as needed, which is more effective for learning and reference than simple scrolling. -->
+    <!-- Visualization & Content Choices: Report Info: Hierarchical text guide for writing a paper. -> Goal: Organize and Inform. -> Viz/Presentation Method: An interactive flowchart built with HTML/CSS (Tailwind Flexbox/Grid) for the main structure, and a dynamic text panel for detailed content. -> Interaction: Clicking a node in the flowchart updates the content panel. -> Justification: This approach provides a clear mental model of the paper's structure and allows for quick, on-demand access to detailed information, enhancing usability. -> Library/Method: Vanilla JavaScript for interaction logic. Chart.js is included per requirements but not used as no quantitative data exists. -->
+    <!-- CONFIRMATION: NO SVG graphics used. NO Mermaid JS used. -->
+    <style>
+        body {
+            font-family: 'Noto Sans TC', sans-serif;
+            background-color: #fdfcfb; /* Lighter Amber */
+        }
+        .flow-node {
+            transition: all 0.3s ease;
+            cursor: pointer;
+            border: 2px solid #e7e5e4; /* stone-200 */
+        }
+        .flow-node:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 10px 15px -3px rgb(0 0 0 / 0.07), 0 4px 6px -4px rgb(0 0 0 / 0.07);
+            border-color: #fbbf24; /* amber-400 */
+        }
+        .flow-node.active {
+            border-color: #f59e0b; /* amber-500 */
+            background-color: #fef3c7; /* amber-100 */
+            box-shadow: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1);
+            transform: translateY(-2px);
+        }
+        .content-panel h3 {
+            font-size: 1.25rem;
+            font-weight: 700;
+            color: #b45309; /* amber-700 */
+            margin-bottom: 0.75rem;
+            padding-bottom: 0.5rem;
+            border-bottom: 2px solid #fcd34d; /* amber-300 */
+        }
+        .content-panel ul {
+            list-style-type: none;
+            padding-left: 0;
+        }
+        .content-panel li {
+            margin-bottom: 1rem;
+            line-height: 1.75;
+        }
+        .content-panel strong {
+            color: #d97706; /* amber-600 */
+            font-weight: 500;
+        }
+        .connector {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            height: 3rem;
+            color: #a8a29e; /* stone-400 */
+        }
+        .connector::after {
+            content: '↓';
+            font-size: 1.5rem;
+        }
+    </style>
+</head>
+<body class="text-stone-800">
+
+    <div class="container mx-auto p-4 md:p-8">
+        <header class="text-center mb-10">
+            <h1 class="text-3xl md:text-4xl font-bold text-amber-800">互動式國際論文架構指南</h1>
+            <p class="mt-2 text-lg text-stone-600">點擊左側流程圖中的任一環節，以深入了解其撰寫細節。</p>
+        </header>
+
+        <main class="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-4 gap-8">
+            
+            <!-- Flowchart Section -->
+            <aside class="md:col-span-1 lg:col-span-1">
+                <div id="flowchart" class="space-y-2">
+                    <!-- Pre-text -->
+                    <div data-section="title" class="flow-node p-4 rounded-lg bg-white text-center shadow-sm">標題</div>
+                    <div class="connector"></div>
+                    <div data-section="authors" class="flow-node p-4 rounded-lg bg-white text-center shadow-sm">作者與所屬機構</div>
+                    <div class="connector"></div>
+                    <div data-section="abstract" class="flow-node p-4 rounded-lg bg-white text-center shadow-sm">摘要</div>
+                    <div class="connector"></div>
+                    <div data-section="keywords" class="flow-node p-4 rounded-lg bg-white text-center shadow-sm">關鍵詞</div>
+                    <div class="connector"></div>
+                    
+                    <!-- Main Body -->
+                    <div class="border-2 border-dashed border-stone-300 rounded-lg p-4 space-y-2 bg-stone-50">
+                        <div data-section="introduction" class="flow-node p-4 rounded-lg bg-white text-center shadow-sm">引言</div>
+                        <div class="connector"></div>
+                        <div data-section="literature-review" class="flow-node p-4 rounded-lg bg-white text-center shadow-sm">文獻回顧</div>
+                        <div class="connector"></div>
+                        <div data-section="methodology" class="flow-node p-4 rounded-lg bg-white text-center shadow-sm">研究方法</div>
+                        <div class="connector"></div>
+                        <div data-section="results" class="flow-node p-4 rounded-lg bg-white text-center shadow-sm">結果</div>
+                        <div class="connector"></div>
+                        <div data-section="discussion" class="flow-node p-4 rounded-lg bg-white text-center shadow-sm">討論</div>
+                        <div class="connector"></div>
+                        <div data-section="conclusion" class="flow-node p-4 rounded-lg bg-white text-center shadow-sm">結論</div>
+                    </div>
+
+                    <!-- Post-text -->
+                    <div class="connector"></div>
+                    <div data-section="acknowledgments" class="flow-node p-4 rounded-lg bg-white text-center shadow-sm">致謝</div>
+                    <div class="connector"></div>
+                    <div data-section="references" class="flow-node p-4 rounded-lg bg-white text-center shadow-sm">參考文獻</div>
+                    <div class="connector"></div>
+                    <div data-section="appendices" class="flow-node p-4 rounded-lg bg-white text-center shadow-sm">附錄</div>
+                </div>
+            </aside>
+
+            <!-- Content Panel Section -->
+            <section id="content-panel-container" class="md:col-span-2 lg:col-span-3">
+                <div id="content-panel" class="bg-white p-6 lg:p-8 rounded-xl shadow-lg border border-stone-200 min-h-[500px] sticky top-8">
+                    <!-- Content will be injected here -->
+                </div>
+            </section>
+
+        </main>
+        
+        <footer class="mt-12 pt-8 border-t border-stone-200">
+             <div id="writing-suggestions" class="bg-amber-50 border-l-4 border-amber-500 text-amber-800 p-6 rounded-r-lg">
+                <h3 class="text-xl font-bold mb-4">重要撰寫建議</h3>
+                <ul class="list-disc list-inside space-y-2">
+                    <li><strong>目標期刊：</strong>在開始撰寫前，確定您希望投稿的期刊，並仔細閱讀其「作者須知」(Author Guidelines)。</li>
+                    <li><strong>清晰邏輯：</strong>確保各章節之間有清晰的邏輯聯繫，內容連貫。</li>
+                    <li><strong>精確語言：</strong>使用精確、客觀的學術語言，避免模糊不清的表述。</li>
+                    <li><strong>反覆修改：</strong>初稿完成後，請務必反覆修改、潤色，並尋求同行或英語母語者審閱以提升品質。</li>
+                </ul>
+             </div>
+        </footer>
+    </div>
+
+    <script>
+        const paperData = {
+            'welcome': {
+                title: '歡迎使用互動式論文指南',
+                content: `
+                    <p class="text-lg">這是一個幫助您理解國際學術論文標準結構的工具。</p>
+                    <p class="mt-4">請從左側的流程圖中選擇一個您感興趣的章節開始探索。每個環節都包含了其核心目的、應涵蓋的內容以及具體的撰寫要求。</p>
+                    <p class="mt-6 text-amber-700 font-semibold">祝您研究順利，論文發表成功！</p>
+                `
+            },
+            'title': {
+                title: '1. Title (標題)',
+                content: `
+                    <ul>
+                        <li><strong>目的 (Purpose)：</strong>簡潔、清晰地概括論文內容，吸引讀者。<br>
+                            To concisely and clearly summarize the paper's content and attract readers.</li>
+                        <li><strong>要求 (Requirements)：</strong>應包含關鍵詞，準確反映研究主題和主要發現。<br>
+                            Should include keywords and accurately reflect the research topic and main findings.</li>
+                        <li><strong>範例 (Example) - 生物資訊學/智慧醫療 (Bioinformatics/Smart Healthcare)：</strong>
+                            <p class="mt-2 p-2 bg-stone-50 rounded-md border border-stone-200">
+                                <strong>中文：</strong>基於深度學習的癌症基因組變異預測模型研究<br>
+                                <strong>英文：</strong>Deep Learning-Based Predictive Models for Cancer Genomic Variations
+                            </p>
+                            <p class="mt-2 p-2 bg-stone-50 rounded-md border border-stone-200">
+                                <strong>中文：</strong>智慧醫療系統中基於區塊鏈的患者數據安全管理框架<br>
+                                <strong>英文：</strong>A Blockchain-Based Secure Patient Data Management Framework in Smart Healthcare Systems
+                            </p>
+                        </li>
+                    </ul>
+                `
+            },
+            'authors': {
+                title: '2. Authors and Affiliations (作者與所屬機構)',
+                content: `
+                    <ul>
+                        <li><strong>目的 (Purpose)：</strong>標明所有貢獻者及其學術單位。<br>
+                            To identify all contributors and their academic affiliations.</li>
+                        <li><strong>要求 (Requirements)：</strong>包含作者姓名、機構名稱、城市、國家，並標明通訊作者（Corresponding Author）。<br>
+                            Include author names, institutional affiliations, city, country, and designate the corresponding author.</li>
+                        <li><strong>範例 (Example) - 生物資訊學/智慧醫療 (Bioinformatics/Smart Healthcare)：</strong>
+                            <p class="mt-2 p-2 bg-stone-50 rounded-md border border-stone-200">
+                                <strong>中文：</strong>張小明<sup>1</sup>, 王大華<sup>2,*</sup><br>
+                                <sup>1</sup>國立臺灣大學生物資訊學研究所, 臺北市, 臺灣<br>
+                                <sup>2</sup>長庚紀念醫院智慧醫療中心, 桃園市, 臺灣<br>
+                                <sup>*</sup>通訊作者：wang.dh@cgmh.org.tw<br>
+                                <strong>英文：</strong>Xiao-Ming Chang<sup>1</sup>, Da-Hua Wang<sup>2,*</sup><br>
+                                <sup>1</sup>Graduate Institute of Bioinformatics, National Taiwan University, Taipei, Taiwan<br>
+                                <sup>2</sup>Smart Healthcare Center, Chang Gung Memorial Hospital, Taoyuan, Taiwan<br>
+                                <sup>*</sup>Corresponding Author: wang.dh@cgmh.org.tw
+                            </p>
+                        </li>
+                    </ul>
+                `
+            },
+            'abstract': {
+                title: '3. Abstract (摘要)',
+                content: `
+                    <ul>
+                        <li><strong>目的 (Purpose)：</strong>提供論文的簡明概覽，讓讀者快速了解研究的重點。<br>
+                            To provide a concise overview of the paper, allowing readers to quickly grasp the key aspects of the research.</li>
+                        <li><strong>內容 (Content)：</strong>
+                            <ul class="list-disc list-inside ml-4 mt-2 space-y-1">
+                                <li><strong>背景/目的 (Background/Purpose)：</strong>簡要介紹研究背景和研究目的。<br>
+                                    Briefly introduce the research background and objectives.</li>
+                                <li><strong>方法 (Methods)：</strong>說明研究設計、數據收集和分析方法。<br>
+                                    Describe the research design, data collection, and analysis methods.</li>
+                                <li><strong>結果 (Results)：</strong>概述主要發現和關鍵數據。<br>
+                                    Summarize the main findings and key data.</li>
+                                <li><strong>結論 (Conclusions)：</strong>總結研究意義、貢獻或未來方向。<br>
+                                    Conclude with the research's significance, contributions, or future directions.</li>
+                            </ul>
+                        </li>
+                        <li><strong>要求 (Requirements)：</strong>通常限制在150-300字，不包含引用。<br>
+                            Typically limited to 150-300 words and should not contain citations.</li>
+                        <li><strong>範例 (Example) - 生物資訊學/智慧醫療 (Bioinformatics/Smart Healthcare)：</strong>
+                            <p class="mt-2 p-2 bg-stone-50 rounded-md border border-stone-200">
+                                <strong>中文：</strong><br>
+                                背景：癌症基因組變異的精確預測對於個性化治療至關重要。本研究旨在開發一種深度學習模型，以提高對罕見癌症基因變異的預測準確性。<br>
+                                方法：我們整合了來自TCGA數據庫的基因表達譜和臨床數據，構建了一個多模態深度學習框架，並採用了交叉驗證策略進行模型訓練和評估。<br>
+                                結果：該模型在獨立測試集上實現了92%的預測準確度，顯著優於傳統機器學習方法，並識別出數個與預後相關的新型生物標誌物。<br>
+                                結論：本研究證明了深度學習在癌症基因組變異預測中的潛力，為精準醫療提供了新的工具。<br>
+                                <strong>英文：</strong><br>
+                                Background: Accurate prediction of cancer genomic variations is crucial for personalized treatment. This study aims to develop a deep learning model to improve the prediction accuracy of rare cancer gene variants.<br>
+                                Methods: We integrated gene expression profiles and clinical data from the TCGA database to construct a multimodal deep learning framework, employing a cross-validation strategy for model training and evaluation.<br>
+                                Results: The model achieved 92% prediction accuracy on an independent test set, significantly outperforming traditional machine learning methods, and identified several novel biomarkers associated with prognosis.<br>
+                                Conclusion: This study demonstrates the potential of deep learning in predicting cancer genomic variations, offering a new tool for precision medicine.
+                            </p>
+                        </li>
+                    </ul>
+                `
+            },
+            'keywords': {
+                title: '4. Keywords (關鍵詞)',
+                content: `
+                    <ul>
+                        <li><strong>目的 (Purpose)：</strong>幫助讀者和檢索系統找到您的論文。<br>
+                            To help readers and indexing systems find your paper.</li>
+                        <li><strong>要求 (Requirements)：</strong>選擇3-7個與論文內容高度相關的詞彙或短語。<br>
+                            Select 3-7 highly relevant terms or phrases related to the paper's content.</li>
+                        <li><strong>範例 (Example) - 生物資訊學/智慧醫療 (Bioinformatics/Smart Healthcare)：</strong>
+                            <p class="mt-2 p-2 bg-stone-50 rounded-md border border-stone-200">
+                                <strong>中文：</strong>深度學習, 癌症基因組學, 精準醫療, 生物標誌物<br>
+                                <strong>英文：</strong>Deep Learning, Cancer Genomics, Precision Medicine, Biomarkers
+                            </p>
+                            <p class="mt-2 p-2 bg-stone-50 rounded-md border border-stone-200">
+                                <strong>中文：</strong>區塊鏈, 醫療數據安全, 智慧醫療, 隱私保護<br>
+                                <strong>英文：</strong>Blockchain, Healthcare Data Security, Smart Healthcare, Privacy Protection
+                            </p>
+                        </li>
+                    </ul>
+                `
+            },
+            'introduction': {
+                title: '5. Introduction (引言)',
+                content: `
+                    <ul>
+                        <li><strong>目的 (Purpose)：</strong>建立研究背景，引導讀者進入研究主題。<br>
+                            To establish the research background and guide readers into the research topic.</li>
+                        <li><strong>內容 (Content)：</strong>
+                            <ul class="list-disc list-inside ml-4 mt-2 space-y-1">
+                                <li><strong>背景介紹 (General Background)：</strong>介紹研究領域的廣泛背景。<br>
+                                    Introduce the broad background of the research field.</li>
+                                <li><strong>文獻回顧 (Literature Review)：</strong>概述前人研究，指出研究空白或爭議點。<br>
+                                    Summarize previous research, highlighting gaps or controversies.</li>
+                                <li><strong>研究問題/目的 (Research Question/Objective)：</strong>明確提出您的研究問題或目標。<br>
+                                    Clearly state your research questions or objectives.</li>
+                                <li><strong>研究貢獻/重要性 (Contribution/Significance)：</strong>闡述本研究的獨特貢獻和重要性。<br>
+                                    Elaborate on the unique contributions and significance of this study.</li>
+                                <li><strong>論文結構概述 (Outline of the Paper - Optional)：</strong>簡要說明後續章節的內容。<br>
+                                    Briefly outline the content of subsequent sections (optional).</li>
+                            </ul>
+                        </li>
+                        <li><strong>範例 (Example) - 生物資訊學/智慧醫療 (Bioinformatics/Smart Healthcare)：</strong>
+                            <p class="mt-2 p-2 bg-stone-50 rounded-md border border-stone-200">
+                                <strong>中文：</strong><br>
+                                癌症是全球主要的死亡原因之一，其複雜性在於多樣的基因組變異。隨著高通量測序技術的發展，產生了海量的基因組數據，為深入理解癌症提供了前所未有的機會。然而，如何從這些龐大的數據中精確識別致病性基因變異，並將其轉化為臨床可用的預測模型，仍是一個重大挑戰。現有方法在處理稀有變異和整合多模態數據方面存在局限性。本研究旨在開發一個新型深度學習框架，以克服這些挑戰，並為癌症精準診斷和治療提供更有效的工具。
+                                <br>
+                                <strong>英文：</strong><br>
+                                Cancer remains a leading cause of mortality worldwide, with its complexity rooted in diverse genomic variations. The advent of high-throughput sequencing technologies has generated vast amounts of genomic data, offering unprecedented opportunities for a deeper understanding of cancer. However, precisely identifying pathogenic genomic variations from these massive datasets and translating them into clinically actionable predictive models remains a significant challenge. Existing methods have limitations in handling rare variants and integrating multimodal data. This study aims to develop a novel deep learning framework to overcome these challenges and provide a more effective tool for precise cancer diagnosis and treatment.
+                            </p>
+                        </li>
+                    </ul>
+                `
+            },
+            'literature-review': {
+                title: '6. Literature Review (文獻回顧)',
+                content: `
+                    <ul>
+                        <li><strong>目的 (Purpose)：</strong>更詳細地評述和分析相關文獻，展示您對研究領域的全面理解。<br>
+                            To critically review and analyze relevant literature, demonstrating a comprehensive understanding of the research field.</li>
+                        <li><strong>內容 (Content)：</strong>系統性地回顧、分析和綜合前人的研究成果，指出其優缺點，並突出您的研究如何填補現有空白或拓展現有知識。<br>
+                            Systematically review, analyze, and synthesize previous research findings, highlighting their strengths and weaknesses, and emphasizing how your study fills existing gaps or expands current knowledge.</li>
+                        <li><strong>備註 (Note)：</strong>此部分可獨立成章，或整合進引言中，取決於期刊風格和研究領域的慣例。<br>
+                            This section can be a standalone chapter or integrated into the introduction, depending on journal style and disciplinary conventions.</li>
+                        <li><strong>範例 (Example) - 生物資訊學/智慧醫療 (Bioinformatics/Smart Healthcare)：</strong>
+                            <p class="mt-2 p-2 bg-stone-50 rounded-md border border-stone-200">
+                                <strong>中文：</strong><br>
+                                傳統上，癌症基因組變異的分析主要依賴於統計學方法和基於規則的演算法。例如，[作者A, 年份] 使用邏輯迴歸模型識別了肺癌中的關鍵驅動基因，但其模型對於低頻率變異的預測能力有限。[作者B, 年份] 引入了支持向量機（SVM）來分類乳腺癌亞型，雖然表現優於邏輯迴歸，但在處理高維度數據時計算成本較高。近年來，深度學習在圖像識別和自然語言處理領域取得了突破，並開始應用於生物資訊學。例如，[作者C, 年份] 首次將卷積神經網絡（CNN）應用於DNA序列分析，展示了其在基因功能預測上的潛力。然而，目前鮮有研究將多模態基因組數據（如基因表達、拷貝數變異和點突變）與深度學習模型結合，以實現對複雜疾病（如癌症）的精準預測。本研究將填補這一空白，提出一個整合性的深度學習框架。
+                                <br>
+                                <strong>英文：</strong><br>
+                                Traditionally, the analysis of cancer genomic variations has primarily relied on statistical methods and rule-based algorithms. For instance, [Author A, Year] used a logistic regression model to identify key driver genes in lung cancer, but its predictive capability for low-frequency variants was limited. [Author B, Year] introduced Support Vector Machines (SVM) for classifying breast cancer subtypes, showing improved performance over logistic regression but incurring high computational costs when dealing with high-dimensional data. In recent years, deep learning has made breakthroughs in image recognition and natural language processing and has begun to be applied in bioinformatics. For example, [Author C, Year] first applied Convolutional Neural Networks (CNN) to DNA sequence analysis, demonstrating its potential in gene function prediction. However, currently, few studies combine multimodal genomic data (such as gene expression, copy number variations, and point mutations) with deep learning models to achieve precise prediction for complex diseases like cancer. This study will fill this gap by proposing an integrated deep learning framework.
+                            </p>
+                        </li>
+                    </ul>
+                `
+            },
+            'methodology': {
+                title: '7. Methodology (研究方法)',
+                content: `
+                    <ul>
+                        <li><strong>目的 (Purpose)：</strong>詳細描述研究的設計和執行過程，確保研究的可重複性。<br>
+                            To describe in detail the research design and execution process, ensuring reproducibility.</li>
+                        <li><strong>內容 (Content)：</strong>
+                            <ul class="list-disc list-inside ml-4 mt-2 space-y-1">
+                                <li><strong>研究設計 (Research Design)：</strong>例如，實驗設計、調查研究、案例研究等。<br>
+                                    E.g., experimental design, survey research, case study, etc.</li>
+                                <li><strong>研究對象/樣本 (Participants/Samples)：</strong>描述研究對象的選擇標準、數量和特徵。<br>
+                                    Describe the selection criteria, number, and characteristics of study subjects.</li>
+                                <li><strong>數據收集 (Data Collection)：</strong>說明使用的工具、儀器、問卷或訪談方法。<br>
+                                    Explain the tools, instruments, questionnaires, or interview methods used.</li>
+                                <li><strong>數據分析 (Data Analysis)：</strong>闡述採用的統計方法、軟體或質性分析技術。<br>
+                                    Elaborate on the statistical methods, software, or qualitative analysis techniques employed.</li>
+                                <li><strong>倫理考量 (Ethical Considerations - 如適用)：</strong>說明研究如何符合倫理規範。<br>
+                                    Explain how the research complies with ethical guidelines (if applicable).</li>
+                            </ul>
+                        </li>
+                        <li><strong>範例 (Example) - 生物資訊學/智慧醫療 (Bioinformatics/Smart Healthcare)：</strong>
+                            <p class="mt-2 p-2 bg-stone-50 rounded-md border border-stone-200">
+                                <strong>中文：</strong><br>
+                                本研究採用回溯性隊列研究設計，分析了來自癌症基因組圖譜（TCGA）數據庫的肺腺癌患者數據集（n=500）。數據包括RNA測序表達譜、體細胞點突變和臨床病理資訊。我們首先對原始數據進行了質量控制和歸一化處理。隨後，構建了一個基於多層感知器（MLP）和卷積神經網絡（CNN）的混合深度學習模型，用於整合不同類型的基因組數據。模型訓練採用Adam優化器，學習率為0.001，並使用五折交叉驗證策略以避免過擬合。模型的性能通過準確度、精確度、召回率和F1分數進行評估。
+                                <br>
+                                <strong>英文：</strong><br>
+                                This study employed a retrospective cohort study design, analyzing a dataset of lung adenocarcinoma patients (n=500) from The Cancer Genome Atlas (TCGA) database. Data included RNA sequencing expression profiles, somatic point mutations, and clinicopathological information. We first performed quality control and normalization on the raw data. Subsequently, a hybrid deep learning model based on Multilayer Perceptron (MLP) and Convolutional Neural Networks (CNN) was constructed to integrate different types of genomic data. Model training utilized the Adam optimizer with a learning rate of 0.001, and a five-fold cross-validation strategy was employed to prevent overfitting. Model performance was evaluated using accuracy, precision, recall, and F1-score.
+                            </p>
+                        </li>
+                    </ul>
+                `
+            },
+            'results': {
+                title: '8. Results (結果)',
+                content: `
+                    <ul>
+                        <li><strong>目的 (Purpose)：</strong>客觀呈現研究發現，不進行解釋或討論。<br>
+                            To objectively present research findings without interpretation or discussion.</li>
+                        <li><strong>內容 (Content)：</strong>
+                            <ul class="list-disc list-inside ml-4 mt-2 space-y-1">
+                                <li><strong>主要發現 (Main Findings)：</strong>清晰、邏輯地呈現數據和結果。<br>
+                                    Clearly and logically present data and results.</li>
+                                <li><strong>圖表 (Figures and Tables)：</strong>使用圖表輔助說明，並在正文中引用和簡要描述。<br>
+                                    Use figures and tables to illustrate, and cite and briefly describe them in the text.</li>
+                            </ul>
+                        </li>
+                        <li><strong>要求 (Requirements)：</strong>僅呈現事實，避免在此章節進行過度解釋或與文獻比較。<br>
+                            Present only facts; avoid excessive interpretation or comparison with literature in this section.</li>
+                        <li><strong>範例 (Example) - 生物資訊學/智慧醫療 (Bioinformatics/Smart Healthcare)：</strong>
+                            <p class="mt-2 p-2 bg-stone-50 rounded-md border border-stone-200">
+                                <strong>中文：</strong><br>
+                                我們的深度學習模型在獨立測試集上達到了0.92的平均準確度（95% CI: 0.90-0.94），顯著高於基線邏輯迴歸模型（0.78）和SVM模型（0.85）（見圖1）。在基因變異預測方面，模型對TP53和EGFR基因的預測敏感性分別為0.95和0.93。此外，我們發現了三個在癌症患者中顯著上調的新型非編碼RNA（ncRNA），其表達水平與患者生存期呈負相關（見表1）。
+                                <br>
+                                <strong>英文：</strong><br>
+                                Our deep learning model achieved an average accuracy of 0.92 (95% CI: 0.90-0.94) on the independent test set, significantly higher than the baseline logistic regression model (0.78) and SVM model (0.85) (see Figure 1). In terms of gene variant prediction, the model demonstrated sensitivities of 0.95 and 0.93 for TP53 and EGFR genes, respectively. Furthermore, we identified three novel non-coding RNAs (ncRNAs) significantly upregulated in cancer patients, whose expression levels were negatively correlated with patient survival (see Table 1).
+                            </p>
+                        </li>
+                    </ul>
+                `
+            },
+            'discussion': {
+                title: '9. Discussion (討論)',
+                content: `
+                    <ul>
+                        <li><strong>目的 (Purpose)：</strong>解釋研究結果，並將其與現有文獻聯繫起來，凸顯研究價值。<br>
+                            To interpret research results, connect them with existing literature, and highlight the study's value.</li>
+                        <li><strong>內容 (Content)：</strong>
+                            <ul class="list-disc list-inside ml-4 mt-2 space-y-1">
+                                <li><strong>結果解釋 (Interpretation of Results)：</strong>解釋您的發現意味著什麼。<br>
+                                    Explain what your findings mean.</li>
+                                <li><strong>與文獻比較 (Comparison with Literature)：</strong>將您的結果與前人研究進行比較，指出一致性或差異。<br>
+                                    Compare your results with previous research, highlighting consistencies or differences.</li>
+                                <li><strong>研究局限性 (Limitations)：</strong>坦誠指出本研究的不足之處。<br>
+                                    Candidly point out the shortcomings of this study.</li>
+                                <li><strong>理論/實踐意義 (Theoretical/Practical Implications)：</strong>闡述研究對理論發展或實際應用的貢獻。<br>
+                                    Elaborate on the study's contributions to theoretical development or practical applications.</li>
+                            </ul>
+                        </li>
+                        <li><strong>範例 (Example) - 生物資訊學/智慧醫療 (Bioinformatics/Smart Healthcare)：</strong>
+                            <p class="mt-2 p-2 bg-stone-50 rounded-md border border-stone-200">
+                                <strong>中文：</strong><br>
+                                本研究的深度學習模型在癌症基因組變異預測方面展現出卓越的性能，這歸因於其能夠有效整合多模態基因組數據，捕捉傳統方法難以發現的複雜非線性關係。與[作者B, 年份]的SVM模型相比，我們的模型在處理高維度數據時展現了更高的效率和準確性。這些結果支持了深度學習在精準腫瘤學中的應用潛力。然而，本研究的局限性在於其回溯性設計和數據來源的單一性（僅限於TCGA數據）。未來研究應納入更多來自不同種族群體的數據，並進行前瞻性驗證。此外，所識別的新型ncRNA作為潛在生物標誌物，為癌症診斷和治療提供了新的研究方向。
+                                <br>
+                                <strong>英文：</strong><br>
+                                The deep learning model in this study demonstrated superior performance in predicting cancer genomic variations, attributable to its ability to effectively integrate multimodal genomic data and capture complex non-linear relationships that are difficult for traditional methods to uncover. Compared to the SVM model by [Author B, Year], our model showed higher efficiency and accuracy when dealing with high-dimensional data. These results support the potential application of deep learning in precision oncology. However, a limitation of this study is its retrospective design and the singularity of data source (limited to TCGA data). Future research should incorporate data from more diverse ethnic groups and conduct prospective validation. Furthermore, the identified novel ncRNAs, as potential biomarkers, offer new research directions for cancer diagnosis and treatment.
+                            </p>
+                        </li>
+                    </ul>
+                `
+            },
+            'conclusion': {
+                title: '10. Conclusion (結論)',
+                content: `
+                    <ul>
+                        <li><strong>目的 (Purpose)：</strong>總結論文的主要觀點，重申研究貢獻，並提出未來研究方向。<br>
+                            To summarize the main points of the paper, reiterate research contributions, and suggest future research directions.</li>
+                        <li><strong>內容 (Content)：</strong>
+                            <ul class="list-disc list-inside ml-4 mt-2 space-y-1">
+                                <li><strong>重申主要發現和結論 (Restate Main Findings and Conclusions)：</strong>簡要概括研究的關鍵成果。<br>
+                                    Briefly summarize the key outcomes of the research.</li>
+                                <li><strong>研究貢獻 (Contributions)：</strong>再次強調本研究的獨特價值。<br>
+                                    Re-emphasize the unique value of this study.</li>
+                                <li><strong>未來研究方向 (Future Research Directions)：</strong>提出基於本研究的後續研究建議。<br>
+                                    Propose suggestions for future research based on this study.</li>
+                            </ul>
+                        </li>
+                        <li><strong>範例 (Example) - 生物資訊學/智慧醫療 (Bioinformatics/Smart Healthcare)：</strong>
+                            <p class="mt-2 p-2 bg-stone-50 rounded-md border border-stone-200">
+                                <strong>中文：</strong><br>
+                                總之，本研究成功開發並驗證了一個基於深度學習的癌症基因組變異預測模型，該模型在預測準確性和多模態數據整合方面表現出色。我們的發現不僅為精準腫瘤學提供了新的計算工具，也揭示了潛在的診斷和治療生物標誌物。未來工作將專注於在更大規模、更多樣化的臨床數據集上驗證模型，並探索其在藥物反應預測中的應用。
+                                <br>
+                                <strong>英文：</strong><br>
+                                In conclusion, this study successfully developed and validated a deep learning-based predictive model for cancer genomic variations, demonstrating excellent performance in prediction accuracy and multimodal data integration. Our findings not only provide a new computational tool for precision oncology but also reveal potential diagnostic and therapeutic biomarkers. Future work will focus on validating the model on larger, more diverse clinical datasets and exploring its application in drug response prediction.
+                            </p>
+                        </li>
+                    </ul>
+                `
+            },
+            'acknowledgments': {
+                title: '11. Acknowledgments (致謝)',
+                content: `
+                    <ul>
+                        <li><strong>目的 (Purpose)：</strong>感謝提供幫助、資金或支持的個人或機構。<br>
+                            To thank individuals or organizations who provided assistance, funding, or support.</li>
+                        <li><strong>備註 (Note)：</strong>此部分為可選，但通常建議包含以示尊重和專業。<br>
+                            This section is optional but generally recommended to show respect and professionalism.</li>
+                        <li><strong>範例 (Example) - 生物資訊學/智慧醫療 (Bioinformatics/Smart Healthcare)：</strong>
+                            <p class="mt-2 p-2 bg-stone-50 rounded-md border border-stone-200">
+                                <strong>中文：</strong><br>
+                                本研究由科技部（計畫編號：MOST 112-XXXX-X-XXX-XXX-XXX）提供資金支持。感謝國立臺灣大學生物資訊學研究所的張教授在數據分析方面的指導，以及長庚紀念醫院智慧醫療中心的李醫師提供寶貴的臨床見解。
+                                <br>
+                                <strong>英文：</strong><br>
+                                This research was supported by funding from the Ministry of Science and Technology (Grant No.: MOST 112-XXXX-X-XXX-XXX-XXX). We thank Professor Chang from the Graduate Institute of Bioinformatics, National Taiwan University, for guidance on data analysis, and Dr. Lee from the Smart Healthcare Center, Chang Gung Memorial Hospital, for providing valuable clinical insights.
+                            </p>
+                        </li>
+                    </ul>
+                `
+            },
+            'references': {
+                title: '12. References (參考文獻)',
+                content: `
+                    <ul>
+                        <li><strong>目的 (Purpose)：</strong>列出所有在論文中引用過的文獻。<br>
+                            To list all literature cited in the paper.</li>
+                        <li><strong>要求 (Requirements)：</strong>嚴格遵循目標期刊規定的引用格式（如APA, MLA, Chicago, IEEE等），保持格式一致性。<br>
+                            Strictly follow the citation style specified by the target journal (e.g., APA, MLA, Chicago, IEEE) and maintain consistent formatting.</li>
+                        <li><strong>範例 (Example) - 生物資訊學/智慧醫療 (Bioinformatics/Smart Healthcare)：</strong>
+                            <p class="mt-2 p-2 bg-stone-50 rounded-md border border-stone-200">
+                                <strong>中文 (APA 7th 版範例)：</strong><br>
+                                張, 小明. (2023). <em>深度學習在癌症基因組學中的應用</em>. 科技出版社。<br>
+                                王, 大華, & 林, 美玲. (2022). 智慧醫療系統中的數據安全挑戰. <em>智慧醫療期刊</em>, <em>15</em>(2), 123-135。<br>
+                                <strong>英文 (APA 7th Edition Example)：</strong><br>
+                                Chang, X. M. (2023). <em>Applications of deep learning in cancer genomics</em>. Science and Technology Press.<br>
+                                Wang, D. H., & Lin, M. L. (2022). Data security challenges in smart healthcare systems. <em>Journal of Smart Healthcare</em>, <em>15</em>(2), 123-135.
+                            </p>
+                        </li>
+                    </ul>
+                `
+            },
+            'appendices': {
+                title: '13. Appendices (附錄)',
+                content: `
+                    <ul>
+                        <li><strong>目的 (Purpose)：</strong>包含對正文過於冗長但有助於理解的補充材料。<br>
+                            To include supplementary materials that are too lengthy for the main text but helpful for understanding.</li>
+                        <li><strong>內容範例 (Content Examples)：</strong>問卷全文、詳細數據表、程式碼、複雜的數學推導等。<br>
+                            Full questionnaires, detailed data tables, source code, complex mathematical derivations, etc.</li>
+                        <li><strong>備註 (Note)：</strong>此部分為可選。<br>
+                            This section is optional.</li>
+                        <li><strong>範例 (Example) - 生物資訊學/智慧醫療 (Bioinformatics/Smart Healthcare)：</strong>
+                            <p class="mt-2 p-2 bg-stone-50 rounded-md border border-stone-200">
+                                <strong>中文：</strong><br>
+                                附錄A：深度學習模型架構詳圖<br>
+                                附錄B：TCGA肺腺癌數據集詳細統計表<br>
+                                附錄C：用於數據預處理的Python程式碼<br>
+                                <strong>英文：</strong><br>
+                                Appendix A: Detailed Deep Learning Model Architecture Diagram<br>
+                                Appendix B: Detailed Statistical Tables for TCGA Lung Adenocarcinoma Dataset<br>
+                                Appendix C: Python Code for Data Preprocessing
+                            </p>
+                        </li>
+                    </ul>
+                `
+            }
+        };
+
+        const flowchart = document.getElementById('flowchart');
+        const contentPanel = document.getElementById('content-panel');
+        const flowNodes = document.querySelectorAll('.flow-node');
+
+        function updateContent(sectionId) {
+            const data = paperData[sectionId];
+            if (!data) return;
+
+            contentPanel.innerHTML = `
+                <h3 class="animate-fade-in">${data.title}</h3>
+                <div class="animate-fade-in-delay">${data.content}</div>
+            `;
+            
+            flowNodes.forEach(node => {
+                node.classList.remove('active');
+                if (node.dataset.section === sectionId) {
+                    node.classList.add('active');
+                }
+            });
+        }
+
+        flowchart.addEventListener('click', (e) => {
+            const targetNode = e.target.closest('.flow-node');
+            if (targetNode) {
+                const sectionId = targetNode.dataset.section;
+                updateContent(sectionId);
+            }
+        });
+
+        // Initial state
+        window.addEventListener('DOMContentLoaded', () => {
+            updateContent('welcome');
+            
+            // Add simple fade-in animations
+            const style = document.createElement('style');
+            style.innerHTML = `
+                @keyframes fadeIn {
+                    from { opacity: 0; transform: translateY(10px); }
+                    to { opacity: 1; transform: translateY(0); }
+                }
+                .animate-fade-in {
+                    animation: fadeIn 0.5s ease-out forwards;
+                }
+                .animate-fade-in-delay {
+                    opacity: 0;
+                    animation: fadeIn 0.5s ease-out 0.2s forwards;
+                }
+            `;
+            document.head.appendChild(style);
+        });
+
+    </script>
+</body>
+</html>
