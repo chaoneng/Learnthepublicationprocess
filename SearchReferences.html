@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>醫學文獻檢索教學</title>
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #f3f4f6; /* Light gray background */
+            color: #333;
+        }
+        .container {
+            max-width: 960px; /* Max width for content */
+            margin: 0 auto; /* Center the container */
+            padding: 2rem;
+        }
+        h1 {
+            color: #1a202c; /* Darker text for headings */
+        }
+        h2 {
+            color: #2d3748; /* Slightly lighter dark text */
+        }
+        h3 {
+            color: #4a5568; /* Even lighter dark text */
+        }
+        a {
+            color: #2563eb; /* Blue for links */
+            text-decoration: none;
+        }
+        a:hover {
+            text-decoration: underline;
+        }
+        ul {
+            list-style-type: disc;
+            margin-left: 1.5rem;
+        }
+        li {
+            margin-bottom: 0.5rem;
+        }
+        .example-box {
+            background-color: #e0f2fe; /* Light blue for examples */
+            border-left: 4px solid #38b2ac; /* Teal border */
+            padding: 1rem;
+            margin-top: 1rem;
+            margin-bottom: 1rem;
+            border-radius: 0.375rem; /* rounded-md */
+            font-family: monospace;
+            color: #2c5282; /* Darker blue text */
+        }
+    </style>
+</head>
+<body class="p-4">
+    <div class="container bg-white shadow-lg rounded-lg p-8 mt-8 mb-8">
+
+        <section class="mb-10">
+            <h2 class="text-3xl font-semibold mb-4 border-b-2 pb-2 border-gray-200">NCBI PubMed 醫學文獻檢索教學手冊</h2>
+            <p class="mb-4 text-lg">NCBI PubMed 提供了多種資源來幫助使用者進行醫學文獻檢索。您可以參考以下連結來學習如何有效地使用 PubMed：</p>
+
+            <h3 class="text-2xl font-medium mb-3 mt-6">官方說明與指南</h3>
+            <ul class="list-disc pl-5 mb-6">
+                <li class="mb-2">
+                    <strong class="text-gray-800">PubMed 說明頁面</strong>：
+                    <ul class="list-circle pl-5 mt-1">
+                        <li><a href="https://pubmed.ncbi.nlm.nih.gov/help/" target="_blank" rel="noopener noreferrer" class="text-blue-600 hover:underline">PubMed Help - National Institutes of Health (NIH)</a>：此頁面包含如何搜尋 PubMed、作者檢索、期刊檢索、使用引號進行精確詞組檢索等詳細說明。</li>
+                        <div class="example-box">
+                            <p><strong>範例：</strong></p>
+                            <p><strong>關鍵字檢索：</strong> <code>diabetes mellitus</code></p>
+                            <p><strong>作者檢索：</strong> <code>smith j[au]</code> (檢索作者 J. Smith 的文獻)</p>
+                            <p><strong>精確詞組檢索：</strong> <code>"heart attack"</code> (使用引號進行精確詞組檢索)</p>
+                        </div>
+                        <li><a href="https://www.ncbi.nlm.nih.gov/books/NBK3830/" target="_blank" rel="noopener noreferrer" class="text-blue-600 hover:underline">PubMed Help - NCBI Bookshelf</a>：提供更全面的 PubMed 使用指南，涵蓋進階檢索、篩選、結果顯示與排序、儲存與分享檢索結果等。</li>
+                    </ul>
+                </li>
+                <li class="mb-2">
+                    <strong class="text-gray-800">PubMed Central 使用指南</strong>：
+                    <ul class="list-circle pl-5 mt-1">
+                        <li><a href="https://pmc.ncbi.nlm.nih.gov/about/userguide/" target="_blank" rel="noopener noreferrer" class="text-blue-600 hover:underline">PMC User Guide - PubMed Central</a>：此指南專注於如何在 PubMed Central (PMC) 中檢索全文文章。</li>
+                        <div class="example-box">
+                            <p><strong>範例：</strong></p>
+                            <p>在 PMC 搜尋框中輸入：<code>COVID-19 vaccine efficacy</code></p>
+                        </div>
+                        <li><a href="https://pmc.ncbi.nlm.nih.gov/articles/PMC10589118/" target="_blank" rel="noopener noreferrer" class="text-blue-600 hover:underline">An Overview of How to Search and Write a Medical Literature Review - PubMed Central</a>：這篇文章提供醫學文獻檢索和撰寫綜述的概述，其中包含 PubMed 的檢索步驟。</li>
+                        <li><a href="https://pmc.ncbi.nlm.nih.gov/articles/PMC4513072/" target="_blank" rel="noopener noreferrer" class="text-blue-600 hover:underline">Demystifying the Search Button: A Comprehensive PubMed Search Strategy for Performing an Exhaustive Literature Review - PMC</a>：一篇關於如何制定全面的 PubMed 檢索策略的文章，涵蓋 MeSH 詞彙和文本檢索方法。</li>
+                        <div class="example-box">
+                            <p><strong>範例：</strong></p>
+                            <p><strong>使用布林運算符：</strong> <code>(cancer OR tumor) AND therapy NOT radiation</code></p>
+                            <p><strong>MeSH 詞彙檢索：</strong> <code>"Diabetes Mellitus"[MeSH]</code></p>
+                        </div>
+                    </ul>
+                </li>
+            </ul>
+
+            <h3 class="text-2xl font-medium mb-3 mt-6">其他資源</h3>
+            <ul class="list-disc pl-5 mb-6">
+                <li class="mb-2">
+                    <strong class="text-gray-800">NCBI 文獻資源總覽</strong>：
+                    <ul class="list-circle pl-5 mt-1">
+                        <li><a href="https://www.ncbi.nlm.nih.gov/guide/literature/" target="_blank" rel="noopener noreferrer" class="text-blue-600 hover:underline">Literature - Site Guide - NCBI</a>：此頁面提供了 NCBI 文獻相關資料庫和工具的概述，包括 PubMed 和 NCBI Help Manual。</li>
+                    </ul>
+                </li>
+                <li class="mb-2">
+                    <strong class="text-gray-800">PubMed 檢索技巧與教程</strong>：
+                    <ul class="list-circle pl-5 mt-1">
+                        <li><a href="https://www.researchgate.net/publication/10949612_Searching_the_Medical_Literature_Using_PubMed_A_Tutorial" target="_blank" rel="noopener noreferrer" class="text-blue-600 hover:underline">Searching the Medical Literature Using PubMed: A Tutorial - ResearchGate</a>：此教學文章討論如何優化 PubMed 醫學文獻檢索，包括使用 MeSH 詞彙、篩選器和連接詞。</li>
+                        <div class="example-box">
+                            <p><strong>範例：</strong></p>
+                            <p><strong>組合檢索：</strong> <code>(hypertension[tiab] OR "high blood pressure"[tiab]) AND (treatment OR therapy)</code></p>
+                            <p>這將在標題或摘要中檢索「高血壓」或「高血壓」，並結合「治療」或「療法」的文獻。</p>
+                        </div>
+                    </ul>
+                </li>
+                <li class="mb-2">
+                    <strong class="text-gray-800">PubMed 官方網站</strong>：
+                    <ul class="list-circle pl-5 mt-1">
+                        <li><a href="https://pubmed.ncbi.nlm.nih.gov/" target="_blank" rel="noopener noreferrer" class="text-blue-600 hover:underline">PubMed Homepage</a>：您可以從 PubMed 首頁進入其學習、查找、下載和探索的各個部分。</li>
+                    </ul>
+                </li>
+            </ul>
+        </section>
+
+        <section>
+            <h2 class="text-3xl font-semibold mb-4 border-b-2 pb-2 border-gray-200">Dimensions.ai 醫學文獻檢索教學手冊</h2>
+            <p class="mb-4 text-lg">經過多方搜尋，我們未能找到 Dimensions.ai 專門的醫學文獻檢索教學手冊或詳細的使用者指南。儘管 Dimensions.ai 是一個強大的研究資訊平台，其公開的詳細操作手冊可能不如 PubMed 那樣易於透過一般搜尋引擎取得。</p>
+            <div class="example-box">
+                <p><strong>範例：</strong></p>
+                <p>由於缺乏公開的詳細操作手冊，這裡提供一個基於一般學術資料庫使用的通用範例，具體操作請參考 Dimensions.ai 官方介面：</p>
+                <p>在 Dimensions.ai 搜尋框中輸入：<code>"artificial intelligence" AND "drug discovery"</code></p>
+                <p>您也可以嘗試使用其進階搜尋選項，根據作者、出版年份、期刊等進行篩選。</p>
+            </div>
+            <p class="text-lg">如果您對 Dimensions.ai 的使用有具體疑問，建議您可以嘗試訪問 Dimensions.ai <strong class="text-gray-800">官方網站</strong>或聯繫其<strong class="text-gray-800">客戶支援</strong>，他們可能會提供更直接的幫助或相關資源。</p>
+        </section>
+    </div>
+</body>
+</html>
